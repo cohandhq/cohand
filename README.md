@@ -143,4 +143,4 @@ Good first contributions: extension routing tests, the click-reliability items, 
 
 ## License
 
-[Apache 2.0](LICENSE). Use it, fork it, ship it, commercially or not.
+Licensed under the [Apache License 2.0](LICENSE).
