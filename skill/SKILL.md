@@ -21,7 +21,7 @@ tab group named `🤖 <your session name>`. You never touch the user's other tab
 - `cohand snapshot` - page as text with element refs like `[e12]`. Use this by default.
 - Act by ref: `cohand click e12`, `cohand type e5 "hello"`, `cohand key Enter`, `cohand select e7 "Large"`,
   `cohand scroll down`, `cohand wait --text "Saved"`.
-- Prefer `snapshot` over `screenshot`: it is cheaper and exact. Use `cohand screenshot` only for visual checks;
+- Prefer `snapshot` over `screenshot`: refs are exact and it is faster. Use `cohand screenshot` only for visual checks;
   it prints a file path, then read that file.
 - After any navigation or big page change, run `cohand snapshot` again. Old refs go stale.
 - `cohand find "save draft"` filters the snapshot by words. `cohand text --selector main` reads plain text.

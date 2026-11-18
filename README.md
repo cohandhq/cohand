@@ -1,48 +1,96 @@
-# Cohand
+<p align="center"><img src="docs/assets/cover.jpg" alt="Cohand: your browser, every profile, any agent" width="100%"></p>
 
-**Your browser. Every profile. Any agent.**
+<p align="center"><img src="docs/assets/logo.png" alt="Cohand logo" width="96" height="96"></p>
 
-Browser automation for AI agents, without the headless browser. Cohand is a Chrome extension and a local CLI that let AI coding agents work in your real, logged-in Chrome, across all your profiles, with many agents at once.
+<h1 align="center">Cohand</h1>
 
-**Works with** Claude Code · Codex · Cursor · Gemini CLI · GitHub Copilot · opencode · Amp · Goose · Factory · Kiro · pi · Grok, and any tool that reads [Agent Skills](https://agentskills.io).
+<p align="center"><b>Your browser. Every profile. Any agent.</b></p>
 
-[![npm](https://img.shields.io/npm/v/cohand.svg)](https://www.npmjs.com/package/cohand) [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE) ![Platform: macOS · Linux](https://img.shields.io/badge/platform-macOS%20%C2%B7%20Linux-lightgrey.svg) ![Chrome](https://img.shields.io/badge/browser-Chrome-4285F4.svg)
+<p align="center">Browser automation for AI agents, without the headless browser.<br>Let your coding agents work in your real, logged-in Chrome: across all your profiles, many agents at once, while you watch.</p>
 
-You don't live in one browser profile. There's work, personal, a client or two, the side project. Your agents shouldn't be stuck in one either.
+<p align="center">
+<a href="https://www.npmjs.com/package/cohand"><img src="https://img.shields.io/npm/v/cohand.svg" alt="npm"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License: Apache 2.0"></a>
+<img src="https://img.shields.io/badge/platform-macOS%20%C2%B7%20Linux-lightgrey.svg" alt="Platform: macOS · Linux">
+<img src="https://img.shields.io/badge/browser-Chrome-4285F4.svg" alt="Chrome">
+</p>
 
-Cohand lets any coding agent (Claude Code, Codex, Cursor, Gemini CLI, Copilot, opencode, and anything that reads Agent Skills, or a plain shell script) work inside the Chrome you already use, **in whichever profile you're in.** Switch windows and new sessions follow you. Run three agents in your work profile and one in personal, and each stays in its own tab group, out of each other's way and out of yours. They use your real logins, cookies and extensions, with no headless copy or cloud browser, and you can watch every click as it happens.
+<p align="center"><b>Works with</b> Claude Code · Codex · Cursor · Gemini CLI · GitHub Copilot · opencode · Amp · Goose · Factory · Kiro · pi · Grok<br>and any tool that reads <a href="https://agentskills.io">Agent Skills</a></p>
 
-```
-cohand session start research
-cohand open https://news.ycombinator.com
-cohand snapshot          # the page as text, with clickable refs like [e12]
-cohand click e12
+<p align="center"><a href="#install">Install</a> · <a href="#features">Features</a> · <a href="#performance">Performance</a> · <a href="#how-it-works">How it works</a> · <a href="docs/ISSUES.md">Known issues</a></p>
+
+```bash
+npm install -g cohand && cohand install
 ```
 
 ---
 
 ## Why Cohand
 
-Agents are great at deciding what to do in a browser. They're bad at getting into one. Headless browsers get stopped by logins, 2FA and bot checks. Cloud browsers need your passwords. Screen-scraping your desktop is slow and fragile.
+You don't live in one browser profile. There's work, personal, a client or two, the side project. Your agents shouldn't be stuck in one either.
 
-Cohand takes a simpler route: **you're already logged in, so let the agent work next to you.** It's a small local daemon plus a Chrome extension. Nothing leaves your machine, and there are no accounts or API keys.
+Agents are great at deciding what to do in a browser. They're bad at getting into one. Headless browsers get stopped by logins, 2FA and bot checks. Cloud browsers want your passwords. Screen-scraping your desktop is slow and fragile.
 
-## What works today
+Cohand takes a simpler route: **you're already logged in, so let your agents work right next to you**, in every profile you have. It's a small local daemon plus a Chrome extension. Nothing leaves your machine, and there are no accounts or API keys.
 
-These are in daily use and solid:
+## Highlights
 
-- **Any profile, automatically.** Load the extension into as many profiles as you like. A new session starts in whichever profile you're using right now, then stays pinned there even when you switch windows. You never have to pass a profile name (`--profile` exists if you want it).
-- **Many agents, one browser.** Several agents can work in the same profile at once, or spread across different profiles, each in its own `🤖 name` tab group. They don't collide, and your own tabs are never touched.
-- **Hand off with a drag.** Drag a tab into an agent's group to give it to that agent, or `adopt` a specific tab. Ending a session just ungroups the tabs; it never closes them.
-- **Live status per profile.** The toolbar badge shows which profile is active (green), on standby (grey) or paused (red). The popup lists the agents working in that profile, each with a Stop button.
-- **Your real logins.** Every site you're signed into just works: no re-login, no 2FA dance, no passwords handed to an agent.
-- **Pages as text, not pixels.** `snapshot` turns a page into a compact accessibility tree with refs (`[e12]`). Agents act on refs, which is cheaper and more exact than reading screenshots.
+<table>
+<tr>
+<td width="33%" valign="top"><h3>🧑‍💻 Every profile, at once</h3>Agents work in your Work, Personal and client profiles <b>at the same time</b>. Each session is pinned to its own profile, so nothing crosses over.</td>
+<td width="33%" valign="top"><h3>🤝 Many agents, no collisions</h3>Run several agents side by side, even in the same profile. Each gets its own <code>🤖 name</code> tab group and never touches your tabs.</td>
+<td width="33%" valign="top"><h3>🔑 Your real logins</h3>Every site you're signed into just works. No re-login, no 2FA dance, no passwords handed to an agent.</td>
+</tr>
+<tr>
+<td valign="top"><h3>👀 Watch it work</h3>A soft glow and a ghost cursor show every move as it happens. Pause any profile, or stop any agent, in one click.</td>
+<td valign="top"><h3>⚡ Fast and lean</h3>Reads a page in ~80 ms with no browser to launch. Snapshots are <b>about 5x smaller</b> than Playwright MCP's on the same page.</td>
+<td valign="top"><h3>🧩 Any agent</h3>One install teaches Claude Code, Codex, Cursor, Gemini CLI, Copilot and more, through the open Agent Skills standard.</td>
+</tr>
+</table>
+
+### Many agents, many profiles, one Chrome
+
+```text
+ Chrome
+ ├─ Work profile ──────── 🤖 research    (Claude Code)
+ │                        🤖 pr-review   (Codex)
+ ├─ Personal profile ──── 🤖 bookings    (Cursor)
+ └─ Client profile ────── 🤖 qa-check    (Gemini CLI)
+                          ...your own tabs stay untouched
+```
+
+### Try it
+
+```bash
+cohand session start research
+cohand open https://news.ycombinator.com
+cohand snapshot          # the page as text, with clickable refs like [e12]
+cohand click e12
+```
+
+## Features
+
+**Profiles and agents**
+- **Every profile, simultaneously.** Load the extension into as many Chrome profiles as you like, and run agents in all of them at the same time.
+- **Follows you automatically.** A new session starts in whichever profile you're using right now, then stays pinned there even when you switch windows. No profile names needed (`--profile` exists if you want it).
+- **Many agents per profile.** Each session gets its own `🤖 name` tab group, so agents never collide with each other or with you.
+- **Hand off with a drag.** Drag a tab into an agent's group to give it to that agent, or `adopt` a specific tab. Ending a session ungroups the tabs; it never closes them.
+- **Sessions that survive.** Sessions persist across daemon restarts and Chrome sleep, so a task can pause between chat turns and pick up where it left off.
+
+**Reading and acting**
+- **Pages as text, not pixels.** `snapshot` turns a page into a compact accessibility tree with refs (`[e12]`), so agents act on exact elements instead of guessing pixel positions.
 - **Real input.** Clicks and keystrokes go through Chrome's debugger protocol, so React and other framework inputs register properly. Typing is checked and retried when needed.
-- **You can see it work.** A soft glow and a ghost cursor show what the agent is doing. They stay out of screenshots.
-- **Sessions that survive.** Sessions persist across daemon restarts and Chrome service-worker sleep, so a task can pause between chat turns and pick up where it left off.
+- **A full toolkit.** Click, type, keys, select, hover, drag, scroll, upload, wait, back/forward, screenshots, downloads, plus console and network logs for debugging.
+
+**Control and safety**
+- **See everything.** A glow and ghost cursor show what the agent is doing, and stay out of screenshots. The toolbar badge shows each profile's status: active (green), standby (grey) or paused (red).
+- **One-click control.** The popup lists the agents in that profile with a Stop button, lets you block Cohand on the current site, and pauses everything with one button.
 - **Guardrails on by default.** Banks, payment pages, password managers and Google account security pages are blocked. Password fields are refused. Cookie *values* are never exposed.
-- **Everything logged, privately.** Every action is written to a local log (`cohand log`). Typed text and scripts are stored as length only, and URLs drop their query strings.
-- **One-command install.** It wires up the daemon (launchd / systemd / tmux) and the native-messaging host, and installs the agent skill to the shared `~/.agents/skills` folder plus each agent it finds: Claude Code, Codex, Cursor, Gemini CLI, Antigravity, Copilot, Factory, Kiro, Goose, opencode, pi and Grok.
+- **Private logs.** Every action is logged locally (`cohand log`). Typed text and scripts are stored as length only, and URLs drop their query strings.
+
+**Setup**
+- **One-command install.** `cohand install` sets up the background service (launchd, systemd or tmux) and the Chrome connection, and installs the agent skill to the shared `~/.agents/skills` folder plus each agent it finds: Claude Code, Codex, Cursor, Gemini CLI, Antigravity, Copilot, Factory, Kiro, Goose, opencode, pi and Grok.
+- **100% local.** No server, no account, no telemetry.
 
 ## Install
 
@@ -86,6 +134,35 @@ Tell your agent *"use the cohand skill"*, or just give it a browser task. The sk
 | `cohand adopt <tabId> --any-tab` | Pull one of your tabs into the agent's group |
 | `cohand session end` | Finish. Tabs are ungrouped, never closed |
 | `cohand log` · `doctor` · `policy` · `profiles` | Inspect and configure |
+
+## Performance
+
+Measured on a MacBook in a normal, everyday Chrome profile (typical results from a handful of runs, November 2026):
+
+| Action | Typical time |
+|---|---|
+| Read a page as text with refs (`snapshot`) | **~80 ms** |
+| Plain text (`text`) / search the page (`find`) | **~65 ms** |
+| Screenshot | **~250 ms** |
+| Key press | **~80 ms** |
+| Type into a field | **~450 ms** (includes checking the value stuck) |
+| Open a page and wait for it to load | **1–2.5 s** (mostly the website itself) |
+
+There's no browser to boot and no login to replay: commands go straight to a Chrome that's already running.
+
+### Smaller pages for your agent
+
+What an agent reads costs tokens. Cohand's snapshots are compact:
+
+| Hacker News front page | Approx. tokens |
+|---|---|
+| **Cohand `snapshot`** | **~2.5K** |
+| Playwright MCP | ~12.3K |
+| Chrome DevTools MCP | ~13.3K |
+
+That's **about 5x smaller** on the same page. Every command's output is also capped at ~15K characters (~4K tokens); anything longer is saved to a file the agent can open if it needs to, so one huge page never floods its context.
+
+<sub>Cohand: our measurement, tokens estimated as characters ÷ 4. Others: [published test, 68 runs](https://dev.to/jaehyun_cho_0dff271e0d2e5/browser-mcp-token-cost-68-runs-of-playwright-mcp-vs-chrome-devtools-mcp-and-a-proxy-that-cuts-1ee). Page content changes day to day, so treat these as ballpark figures.</sub>
 
 ## How it works
 
