@@ -1,0 +1,13 @@
+{
+  "name": "cohand",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": { "cohand": "cli/cohand.mjs" },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}
