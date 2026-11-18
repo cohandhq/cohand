@@ -55,6 +55,7 @@ test("linux install writes systemd unit, supervise script, and Chrome user-data-
   const home = tmpHome();
   fs.mkdirSync(P(home, ".codex"));
   fs.mkdirSync(P(home, ".grok"));
+  fs.mkdirSync(P(home, ".cursor"));
   const profileRoot = fakeProfileTree(home);
   process.env.COHAND_HOME = P(home, ".cohand");
   try {
@@ -92,6 +93,9 @@ test("linux install writes systemd unit, supervise script, and Chrome user-data-
 
     assert.ok(fs.existsSync(P(home, ".codex/skills/cohand/SKILL.md")));
     assert.ok(fs.existsSync(P(home, ".grok/skills/cohand/SKILL.md")));
+    assert.ok(fs.existsSync(P(home, ".cursor/skills/cohand/SKILL.md")));
+    assert.ok(fs.existsSync(P(home, ".agents/skills/cohand/SKILL.md")), "shared Agent Skills dir always gets the skill");
+    assert.ok(!fs.existsSync(P(home, ".kiro")), "no skill dir where agent is absent");
     assert.ok(!fs.existsSync(P(home, ".claude")), "no skill dir where agent is absent");
     assert.equal(fs.readlinkSync(P(home, ".local/bin/cohand")).endsWith("cli/cohand.mjs"), true);
 

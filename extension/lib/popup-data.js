@@ -23,9 +23,9 @@ export function isBlocked(domain, list) {
 }
 
 export function statusView({ enabled, connected, front }) {
-  if (!enabled) return { label: "Off", dot: "off" };
+  if (!enabled) return { label: "Paused", dot: "off" };
   if (!connected) return { label: "Connecting…", dot: "standby" };
-  return front ? { label: "Active (front)", dot: "on" } : { label: "Standby", dot: "standby" };
+  return front ? { label: "Active", dot: "on" } : { label: "Standby", dot: "standby" };
 }
 
 /** Newest first, at most 20. Accepts entries in any order. */

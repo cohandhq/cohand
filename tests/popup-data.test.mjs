@@ -25,9 +25,9 @@ test("isBlocked matches the domain or a parent entry", () => {
 });
 
 test("statusView: label + dot from front / enabled / connected", () => {
-  assert.deepEqual(statusView({ enabled: true, connected: true, front: true }), { label: "Active (front)", dot: "on" });
+  assert.deepEqual(statusView({ enabled: true, connected: true, front: true }), { label: "Active", dot: "on" });
   assert.deepEqual(statusView({ enabled: true, connected: true, front: false }), { label: "Standby", dot: "standby" });
-  assert.deepEqual(statusView({ enabled: false, connected: false, front: false }), { label: "Off", dot: "off" });
+  assert.deepEqual(statusView({ enabled: false, connected: false, front: false }), { label: "Paused", dot: "off" });
   assert.deepEqual(statusView({ enabled: true, connected: false, front: false }), { label: "Connecting…", dot: "standby" });
 });
 

@@ -3,67 +3,78 @@
 <head>
 <meta charset="utf-8">
 <style>
-  :root { color-scheme: light dark; --accent:#22d3a6; --accent2:#42fac7; --ink:#041442; --bg:#fff; --fg:#1d2129; --mut:#6b7280; --line:#eceef1; --card:#f6f7f9; --green:#2ea043; --red:#da3633; --grey:#8a8f98; --btn:#e8eaee; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#16181d; --fg:#e6e8eb; --mut:#8b919a; --line:#252930; --card:#1e2128; --btn:#2a2e36; } }
+  :root { color-scheme: light dark; --accent:#22d3a6; --ink:#041442; --bg:#fff; --fg:#1d2129; --mut:#6b7280; --faint:#9aa0a8; --line:#eceef1; --card:#f7f8fa; --red:#da3633; --pill:#eef0f3; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16181d; --fg:#e6e8eb; --mut:#8b919a; --faint:#646a73; --line:#252930; --card:#1d2026; --pill:#23272e; } }
   * { box-sizing: border-box; }
-  body { width: 300px; margin: 0; padding: 14px 14px 12px; -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--fg); font: 13px/1.4 -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
-  header { display: flex; align-items: center; gap: 9px; font-weight: 650; font-size: 15px; letter-spacing: -.01em; }
-  header img { width: 22px; height: 22px; border-radius: 6px; flex: none; }
-  header .state { display: flex; align-items: center; gap: 6px; }
-  header .state { margin-left: auto; font-weight: 400; color: var(--mut); font-size: 12px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--grey); flex: none; }
-  .dot.on { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); } .dot.off { background: var(--red); }
+  body { width: 300px; margin: 0; padding: 14px 14px 10px; -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--fg); font: 13px/1.4 -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
+  header { display: flex; align-items: center; gap: 10px; }
+  header img { width: 28px; height: 28px; border-radius: 7px; flex: none; }
+  .title { flex: 1; min-width: 0; }
+  .brand { font-weight: 650; font-size: 14px; letter-spacing: -.01em; }
+  .state { display: flex; align-items: center; gap: 6px; padding: 3px 9px 3px 7px; border-radius: 999px; background: var(--pill); color: var(--mut); font-size: 11px; font-weight: 500; flex: none; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); flex: none; }
+  .dot.on { background: var(--accent); } .dot.off { background: var(--red); }
+  input[type=text] { display: block; width: 100%; margin: 0; padding: 0; border: 0; background: transparent; color: var(--mut); font: 12px/1.4 inherit; outline: none; text-overflow: ellipsis; }
+  input[type=text]:hover { color: var(--fg); } input[type=text]:focus { color: var(--fg); }
   section { margin-top: 16px; }
-  h2 { margin: 0 0 6px; font-size: 11px; font-weight: 500; color: var(--mut); }
-  input[type=text] { width: 100%; margin-top: 2px; padding: 3px 0; border: 0; border-bottom: 1px solid transparent; background: transparent; color: var(--mut); font: 12px/1.4 inherit; outline: none; }
-  input[type=text]:hover { border-bottom-color: var(--line); } input[type=text]:focus { border-bottom-color: var(--mut); color: var(--fg); }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 9px 10px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-  .card.live { border-color: color-mix(in srgb, var(--accent) 45%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent), 0 0 18px -6px var(--accent2); }
+  h2 { margin: 0 0 6px; font-size: 11px; font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; }
+  .list { background: var(--card); border-radius: 10px; overflow: hidden; }
+  .agent, .card { display: flex; align-items: center; gap: 9px; padding: 9px 10px; }
+  .agent + .agent { border-top: 1px solid var(--line); }
+  .card { background: var(--card); border-radius: 10px; margin-bottom: 6px; }
   .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; animation: breathe 2.4s ease-in-out infinite; }
-  @keyframes breathe { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 50% { box-shadow: 0 0 0 4px transparent; } }
-  .card .grow { flex: 1; min-width: 0; }
-  .card .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @keyframes breathe { 50% { opacity: .35; } }
+  .grow { flex: 1; min-width: 0; }
+  .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { color: var(--mut); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .empty { color: var(--mut); font-size: 12px; }
-  button { border: 0; border-radius: 6px; padding: 5px 10px; background: var(--btn); color: var(--fg); font: inherit; font-weight: 500; cursor: pointer; }
-  button.allow { background: var(--accent2); color: var(--ink); } button.deny, button.stop { background: transparent; color: var(--mut); padding: 4px 6px; }
+  .empty { color: var(--mut); font-size: 12px; padding: 10px; }
+  button { border: 0; border-radius: 6px; padding: 5px 10px; background: var(--pill); color: var(--fg); font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; }
+  button.allow { background: var(--accent); color: var(--ink); }
+  button.stop, button.deny { background: transparent; color: var(--mut); padding: 4px 6px; }
   button.stop:hover, button.deny:hover { color: var(--red); }
-  button.kill { width: 100%; padding: 8px; background: transparent; color: var(--mut); border: 1px solid var(--line); }
-  button.kill:hover { color: var(--red); border-color: color-mix(in srgb, var(--red) 40%, transparent); }
-  button.kill.resume { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: var(--ink); border-color: transparent; }
-  label.toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-  .recent { font-size: 12px; }
-  .recent div { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
-  .recent div + div { border-top: 1px solid var(--line); }
+  .row { display: flex; align-items: center; gap: 10px; padding: 9px 10px; font-size: 12px; cursor: pointer; }
+  .row + .row { border-top: 1px solid var(--line); }
+  .row .hint { display: block; color: var(--mut); font-size: 11px; margin-top: 1px; }
+  input[type=checkbox] { appearance: none; flex: none; width: 28px; height: 16px; margin: 0; border-radius: 999px; background: var(--line); position: relative; cursor: pointer; transition: background .15s; }
+  input[type=checkbox]::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .15s; }
+  input[type=checkbox]:checked { background: var(--accent); }
+  input[type=checkbox]:checked::after { transform: translateX(12px); }
+  input[type=checkbox]:disabled { opacity: .5; cursor: default; }
+  .recent div { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 12px; }
   .recent .a { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .recent .s { color: var(--mut); }
-  .recent .t { color: var(--mut); flex: none; font-variant-numeric: tabular-nums; }
+  .recent .t { color: var(--faint); flex: none; font-size: 11px; font-variant-numeric: tabular-nums; }
   .recent .x { color: var(--red); flex: none; font-size: 11px; }
-  .hint { color: var(--mut); font-size: 11px; margin: 3px 0 0 24px; }
-  input[type=checkbox] { accent-color: var(--accent); }
+  .recent .empty { padding: 0; }
+  footer { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); }
+  button.kill { width: 100%; padding: 7px; background: transparent; color: var(--mut); }
+  button.kill:hover { color: var(--red); background: var(--pill); }
+  button.kill.resume { background: var(--accent); color: var(--ink); }
   .err { color: var(--red); font-size: 12px; margin-top: 8px; }
+  .err:empty { display: none; }
 </style>
 </head>
 <body>
-  <header><img src="icons/icon48.png" alt="" width="22" height="22">Cohand<span class="state"><span class="dot" id="dot"></span><span id="state"></span></span></header>
-  <input type="text" id="profile" placeholder="Name this profile" title="Profile name — click to edit">
+  <header>
+    <img src="icons/icon48.png" alt="" width="28" height="28">
+    <div class="title"><div class="brand">Cohand</div><input type="text" id="profile" placeholder="Name this profile" title="Profile name — click to edit"></div>
+    <span class="state"><span class="dot" id="dot"></span><span id="state"></span></span>
+  </header>
 
-  <section><h2>Agents</h2><div id="agents"></div></section>
+  <section><h2>Agents</h2><div class="list" id="agents"></div></section>
 
   <section id="askSec" hidden><h2>Waiting for approval</h2><div id="asks"></div></section>
 
-  <section id="siteSec" hidden><h2>This site</h2>
-    <label class="toggle"><input type="checkbox" id="block"><span id="blockLabel"></span></label>
-  </section>
-
-  <section><h2>Privacy</h2>
-    <label class="toggle"><input type="checkbox" id="anyTab"><span>Agents can see all my tabs</span></label>
-    <div class="hint">Off: agents only see tabs in their own 🤖 group.</div>
+  <section><h2>Settings</h2>
+    <div class="list">
+      <label class="row" id="siteSec" hidden><span class="grow" id="blockLabel"></span><input type="checkbox" id="block"></label>
+      <label class="row"><span class="grow">Agents can see all my tabs<span class="hint">Off: only tabs in their own 🤖 group</span></span><input type="checkbox" id="anyTab"></label>
+    </div>
   </section>
 
   <section><h2>Recent</h2><div class="recent" id="recent"></div></section>
 
-  <section><button class="kill" id="kill"></button></section>
+  <footer><button class="kill" id="kill"></button></footer>
   <div class="err" id="err"></div>
   <script type="module" src="popup.js"></script>
 </body>

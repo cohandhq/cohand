@@ -34,14 +34,14 @@ async function refresh() {
 
   const agents = $("agents"); agents.textContent = "";
   for (const s of st.sessions || []) {
-    const card = el("div", "card live");
+    const card = el("div", "agent");
     const info = el("div", "grow");
     card.append(el("span", "live-dot"));
     info.append(el("div", "name", s.name), el("div", "sub", s.lastAction ? `${s.lastAction} · ${timeAgo(s.lastAt)}` : "no actions yet"));
     card.append(info, button("Stop", "stop", () => bg({ popup: "call", op: "session.end", args: { session: s.id } })));
     agents.append(card);
   }
-  if (!(st.sessions || []).length) agents.append(el("div", "empty", "No agents right now."));
+  if (!(st.sessions || []).length) agents.append(el("div", "empty", "No agents working right now."));
 
   const asks = (st.pending || []).length ? st.pending : (st.asks || []);
   $("askSec").hidden = !asks.length;

@@ -186,13 +186,25 @@ done
 }
 
 function skillDirs(home) {
+  // ~/.agents/skills is the shared Agent Skills location (agentskills.io); always install there.
+  const shared = path.join(home, ".agents/skills");
   return [
-    path.join(home, ".claude/skills"),
-    path.join(home, ".codex/skills"),
-    path.join(home, ".pi/agent/skills"),
-    path.join(home, ".config/opencode/skills"),
-    path.join(home, ".grok/skills"),
-  ].filter((d) => fs.existsSync(path.dirname(d)));
+    shared,
+    ...[
+      path.join(home, ".claude/skills"),
+      path.join(home, ".codex/skills"),
+      path.join(home, ".pi/agent/skills"),
+      path.join(home, ".config/opencode/skills"),
+      path.join(home, ".grok/skills"),
+      path.join(home, ".cursor/skills"),
+      path.join(home, ".gemini/skills"),
+      path.join(home, ".gemini/antigravity/skills"),
+      path.join(home, ".copilot/skills"),
+      path.join(home, ".factory/skills"),
+      path.join(home, ".kiro/skills"),
+      path.join(home, ".config/goose/skills"),
+    ].filter((d) => fs.existsSync(path.dirname(d))),
+  ];
 }
 
 export function plan({ home, cohandHome, node, platform } = {}) {

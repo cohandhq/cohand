@@ -2,13 +2,15 @@
 
 **Your browser. Every profile. Any agent.**
 
-A Chrome extension and a local CLI that let AI coding agents work in your real, logged-in Chrome, across all your profiles, with many agents at once.
+Browser automation for AI agents, without the headless browser. Cohand is a Chrome extension and a local CLI that let AI coding agents work in your real, logged-in Chrome, across all your profiles, with many agents at once.
 
-[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE) ![Platform: macOS · Linux](https://img.shields.io/badge/platform-macOS%20%C2%B7%20Linux-lightgrey.svg) ![Chrome](https://img.shields.io/badge/browser-Chrome-4285F4.svg)
+**Works with** Claude Code · Codex · Cursor · Gemini CLI · GitHub Copilot · opencode · Amp · Goose · Factory · Kiro · pi · Grok, and any tool that reads [Agent Skills](https://agentskills.io).
+
+[![npm](https://img.shields.io/npm/v/cohand.svg)](https://www.npmjs.com/package/cohand) [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE) ![Platform: macOS · Linux](https://img.shields.io/badge/platform-macOS%20%C2%B7%20Linux-lightgrey.svg) ![Chrome](https://img.shields.io/badge/browser-Chrome-4285F4.svg)
 
 You don't live in one browser profile. There's work, personal, a client or two, the side project. Your agents shouldn't be stuck in one either.
 
-Cohand lets any coding agent (Claude Code, Codex, opencode, pi, Grok, or a plain shell script) work inside the Chrome you already use, **in whichever profile you're in.** Switch windows and new sessions follow you. Run three agents in your work profile and one in personal, and each stays in its own tab group, out of each other's way and out of yours. They use your real logins, cookies and extensions, with no headless copy or cloud browser, and you can watch every click as it happens.
+Cohand lets any coding agent (Claude Code, Codex, Cursor, Gemini CLI, Copilot, opencode, and anything that reads Agent Skills, or a plain shell script) work inside the Chrome you already use, **in whichever profile you're in.** Switch windows and new sessions follow you. Run three agents in your work profile and one in personal, and each stays in its own tab group, out of each other's way and out of yours. They use your real logins, cookies and extensions, with no headless copy or cloud browser, and you can watch every click as it happens.
 
 ```
 cohand session start research
@@ -40,23 +42,21 @@ These are in daily use and solid:
 - **Sessions that survive.** Sessions persist across daemon restarts and Chrome service-worker sleep, so a task can pause between chat turns and pick up where it left off.
 - **Guardrails on by default.** Banks, payment pages, password managers and Google account security pages are blocked. Password fields are refused. Cookie *values* are never exposed.
 - **Everything logged, privately.** Every action is written to a local log (`cohand log`). Typed text and scripts are stored as length only, and URLs drop their query strings.
-- **One-command install.** It wires up the daemon (launchd / systemd / tmux) and the native-messaging host, and installs the agent skill for Claude Code, Codex, opencode, pi and Grok.
+- **One-command install.** It wires up the daemon (launchd / systemd / tmux) and the native-messaging host, and installs the agent skill to the shared `~/.agents/skills` folder plus each agent it finds: Claude Code, Codex, Cursor, Gemini CLI, Antigravity, Copilot, Factory, Kiro, Goose, opencode, pi and Grok.
 
 ## Install
 
-Requirements: **macOS or Linux**, **Chrome**, and **Node.js** (tested on Node 24).
+Requirements: **macOS or Linux**, **Chrome**, and **Node.js 20+**.
 
 ```bash
-git clone https://github.com/cohandhq/cohand.git
-cd cohand
-npm install
-node cli/cohand.mjs install
+npm install -g cohand
+cohand install
 ```
 
-Then, in each Chrome profile you want agents to use:
+`cohand install` prints the path of the extension folder. Then, in each Chrome profile you want agents to use:
 
 1. Open `chrome://extensions` and turn on **Developer mode**.
-2. Click **Load unpacked** and pick the `extension` folder.
+2. Click **Load unpacked** and pick that `extension` folder.
 3. Name the profile in the Cohand popup.
 
 Check that everything is green:
@@ -64,6 +64,10 @@ Check that everything is green:
 ```bash
 cohand doctor
 ```
+
+**Just the skill?** If Cohand is already installed and you only want an agent to learn it: `npx skills add cohandhq/cohand`.
+
+**From source:** `git clone https://github.com/cohandhq/cohand.git && cd cohand && npm install && node cli/cohand.mjs install`.
 
 Full details: [docs/INSTALL.md](docs/INSTALL.md).
 
