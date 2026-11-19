@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4 (2026-11-19)
+
+- `cohand open` follows along: when you are looking at the agent's tab group, the page it opens comes to the front so you can watch it work. It never steals focus from your own tabs.
+
 ## 0.2.3 (2026-11-19)
 
 - `cohand install --help` and `cohand doctor --help` now show help instead of running; unknown options are refused.

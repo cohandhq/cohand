@@ -274,6 +274,7 @@ export async function openInGroup(session, url, { newTab = false } = {}) {
   if (tabs.length && !newTab) {
     const t = await targetTab(session);
     await call((cb) => chrome.tabs.update(t.id, { url }, cb));
+    await followIfWatching(session, t.id);
     return t.id;
   }
   const created = await call((cb) => chrome.tabs.create({ url, active: false }, cb));
@@ -283,7 +284,18 @@ export async function openInGroup(session, url, { newTab = false } = {}) {
   await rememberGroupSession(groupId, session);
   if (!groups.length) await call((cb) => chrome.tabGroups.update(groupId, { title: groupTitle(session.name), color: "cyan" }, cb));
   await setLastUsed(session.id, created.id);
+  await followIfWatching(session, created.id);
   return created.id;
+}
+
+/** If the user is looking at this session's group, bring the tab it just opened to the front.
+ *  If they're on one of their own tabs, leave them alone. */
+async function followIfWatching(session, tabId) {
+  const [active] = await call((cb) => chrome.tabs.query({ active: true, currentWindow: true }, cb));
+  if (!active || active.id === tabId) return;
+  const groups = await groupsFor(session);
+  if (!groups.some((g) => g.id === active.groupId)) return;
+  await call((cb) => chrome.tabs.update(tabId, { active: true }, cb));
 }
 
 export function forgetSession(id) {

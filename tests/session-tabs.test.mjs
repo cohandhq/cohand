@@ -318,3 +318,18 @@ test("endSession ungroups the session's tabs and never closes them", async () =>
   assert.equal(state.tabs.length, 3);
   assert.deepEqual(state.tabs.map((t) => t.groupId), [-1, -1, -1]);
 });
+
+test("open brings its tab to the front when the user is watching the agent's group", async () => {
+  state.groups.push({ id: 1, title: "🤖 a" });
+  state.tabs.push({ id: 2, groupId: 1, active: true });
+  const id = await openInGroup(S, "https://b.com/", { newTab: true });
+  assert.equal(state.tabs.find((t) => t.id === id).active, true);
+});
+
+test("open never steals focus from the user's own tab", async () => {
+  state.groups.push({ id: 1, title: "🤖 a" });
+  state.tabs.push({ id: 1, groupId: -1, active: true }, { id: 2, groupId: 1, active: false });
+  const id = await openInGroup(S, "https://b.com/", { newTab: true });
+  assert.equal(state.tabs.find((t) => t.id === id).active, false);
+  assert.equal(state.tabs.find((t) => t.id === 1).active, true);
+});

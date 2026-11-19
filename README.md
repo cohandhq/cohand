@@ -16,13 +16,28 @@
 
 <p align="center"><b>Works with</b> Claude Code · Codex · Cursor · Gemini CLI · GitHub Copilot · opencode · Amp · Goose · Factory · Kiro · pi · Grok<br>and any tool that reads <a href="https://agentskills.io">Agent Skills</a></p>
 
-<p align="center"><a href="#install">Install</a> · <a href="#features">Features</a> · <a href="#how-is-it-different">Compare</a> · <a href="#performance">Performance</a> · <a href="#how-it-works">How it works</a> · <a href="docs/ISSUES.md">Known issues</a></p>
+<p align="center"><a href="#see-it-work">Demo</a> · <a href="#install">Install</a> · <a href="#features">Features</a> · <a href="#how-is-it-different">Compare</a> · <a href="#performance">Performance</a> · <a href="#how-it-works">How it works</a> · <a href="docs/ISSUES.md">Known issues</a></p>
 
 ```bash
 npm install -g cohand && cohand install
 ```
 
 ---
+
+## See it work
+
+Real runs in a normal Chrome profile, sped up. Watch the glow and the agent's own 🤖 tab group.
+
+<table>
+<tr>
+<td width="50%" valign="top"><b>Browse and read</b><br>Hacker News → top story's comments → GitHub → Wikipedia<br><img src="docs/assets/demo/browse.gif" alt="Cohand browsing Hacker News, GitHub and Wikipedia" width="100%"></td>
+<td width="50%" valign="top"><b>Find the cheapest flight</b><br>San Francisco → New York on Google Flights<br><img src="docs/assets/demo/flights.gif" alt="Cohand finding the cheapest flight from San Francisco to New York" width="100%"></td>
+</tr>
+<tr>
+<td valign="top"><b>Find a cheap hotel</b><br>Near Times Square, sorted by price on Hotels.com<br><img src="docs/assets/demo/hotels.gif" alt="Cohand sorting hotels near Times Square by price" width="100%"></td>
+<td valign="top"><b>Check the weekend weather</b><br>New York, Saturday and Sunday on BBC Weather<br><img src="docs/assets/demo/weather.gif" alt="Cohand checking New York weekend weather on BBC Weather" width="100%"></td>
+</tr>
+</table>
 
 ## Why Cohand
 
