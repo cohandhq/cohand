@@ -59,11 +59,19 @@ export function mouse(tabId, type, x, y, opts = {}) {
 }
 
 export async function click(tabId, x, y) {
-  await withDebugger(tabId, async (send) => {
-    await send("Input.dispatchMouseEvent", { type: "mouseMoved", x, y });
-    await send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
-    await send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
-  });
+  let dispatched = false;
+  try {
+    await withDebugger(tabId, async (send) => {
+      await send("Input.dispatchMouseEvent", { type: "mouseMoved", x, y });
+      dispatched = true;
+      await send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
+      await send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
+    });
+  } catch (e) {
+    // Callers use this to decide whether a DOM click would fire a second time.
+    if (e && typeof e === "object") e.dispatched = dispatched;
+    throw e;
+  }
 }
 
 export async function drag(tabId, from, to) {

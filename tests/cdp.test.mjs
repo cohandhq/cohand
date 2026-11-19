@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { key, screenshot, release, parseCombo, shotToCss } from "../extension/lib/cdp.js";
+import { click, key, screenshot, release, parseCombo, shotToCss } from "../extension/lib/cdp.js";
 
 test("page keys bring the session tab forward and preserve the current DOM focus", async () => {
   const calls = [];
@@ -36,6 +36,45 @@ test("screenshots include the browser device scale factor", async () => {
   await release([45]);
   assert.equal(result.dataUrl, "data:image/png;base64,cG5n");
   assert.equal(result.deviceScaleFactor, 2);
+});
+
+test("a click that never attaches is tagged as not dispatched", async () => {
+  globalThis.chrome = {
+    runtime: { lastError: undefined },
+    debugger: {
+      attach(_target, _version, cb) {
+        chrome.runtime.lastError = { message: "Cannot access a chrome:// URL" };
+        cb();
+        chrome.runtime.lastError = undefined;
+      },
+      detach(_target, cb) { cb(); },
+      sendCommand() { throw new Error("no event may be sent without attaching"); },
+    },
+  };
+  await assert.rejects(click(60, 10, 10), (e) => e.dispatched === false);
+});
+
+test("a click that fails after a mouse event is tagged as dispatched", async () => {
+  let sent = 0;
+  globalThis.chrome = {
+    runtime: { lastError: undefined },
+    debugger: {
+      attach(_target, _version, cb) { cb(); },
+      detach(_target, cb) { cb(); },
+      sendCommand(_target, _method, _params, cb) {
+        sent++;
+        if (sent > 1) chrome.runtime.lastError = { message: "Input.dispatchMouseEvent timed out" };
+        cb({});
+        chrome.runtime.lastError = undefined;
+      },
+    },
+  };
+  try {
+    await assert.rejects(click(61, 10, 10), (e) => e.dispatched === true);
+  } finally {
+    await release([61]);
+  }
+  assert.equal(sent, 2, "the first mouse event reached the page");
 });
 
 test("parseCombo uses US virtual-key codes and insertText for unmodified printables", () => {

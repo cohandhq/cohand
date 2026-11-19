@@ -4,6 +4,8 @@
 
 import { targetTab, adoptTab, openInGroup, groupTabs, forgetSession, endSession, pinSessionTab } from "./lib/session-tabs.js";
 import * as cdp from "./lib/cdp.js";
+import { clickRef } from "./lib/click.js";
+import { retryInjected } from "./lib/page-call.js";
 import { historyError, watchTabChange } from "./lib/navigation.js";
 import { describePageError, isPageErrorMessage } from "./lib/page-errors.js";
 import { askUser } from "./lib/ask.js";
@@ -34,7 +36,7 @@ async function inject(tabId) {
   await call((cb) => chrome.scripting.executeScript({ target: { tabId }, files: CONTENT_FILES }, cb));
 }
 
-/** Send a command to the content script in a tab; inject and retry once if it isn't there. */
+/** Send a command to the content script in a tab; inject only if it isn't there. */
 async function page(tab, cmd, args = {}) {
   const { session, ...rest } = args;
   const send = () => new Promise((resolve, reject) => {
@@ -46,16 +48,12 @@ async function page(tab, cmd, args = {}) {
       else reject(new Error(resp.error || "page command failed"));
     });
   });
-  try { return await send(); }
-  catch (e) {
+  try {
+    return await retryInjected(send, () => inject(tab.id));
+  } catch (e) {
+    // Re-injecting fails on a Chrome error page, so map that error too.
     if (isPageErrorMessage(e.message)) throw new Error(describePageError(e.message, tab.url));
-    if (/stale|blocked|no option|no match|timed out/i.test(e.message)) throw e;
-    try { await inject(tab.id); return await send(); }
-    catch (e2) {
-      // Re-injecting is what fails on a Chrome error page, so map that error too.
-      if (isPageErrorMessage(e2.message)) throw new Error(describePageError(e2.message, tab.url));
-      throw e2;
-    }
+    throw e;
   }
 }
 
@@ -133,7 +131,8 @@ async function cmdClose(a) {
 
 async function cmdNav(a, how) {
   const t = await pick(a);
-  const changed = watchTabChange(t.id, t, { onUpdated: chrome.tabs.onUpdated, getTab: (id) => call((cb) => chrome.tabs.get(id, cb)) });
+  // Back/forward/reload are explicit navigations: wait for the page to finish loading, as before.
+  const changed = watchTabChange(t.id, t, { onUpdated: chrome.tabs.onUpdated, getTab: (id) => call((cb) => chrome.tabs.get(id, cb)) }, 800, 15000);
   try {
     if (how === "back") await call((cb) => chrome.tabs.goBack(t.id, cb));
     else if (how === "forward") await call((cb) => chrome.tabs.goForward(t.id, cb));
@@ -176,17 +175,15 @@ async function cmdClick(a) {
     if (a.fromShot) ({ x, y } = cdp.shotToCss(x, y, await pageMetrics(t.id)));
     await cdp.click(t.id, x, y);
   } else if (a.ref) {
-    const rect = await page(t, "rect", { ref: a.ref });
-    try {
-      await cdp.click(t.id, rect.x, rect.y);
-    } catch {
-      await page(t, "click", { ref: a.ref });
-    }
+    await clickRef(t, a.ref, { click: cdp.click, send: (cmd, extra) => page(t, cmd, extra) });
   } else {
     await page(t, "click", { ref: a.ref });
   }
   const fresh = await changed;
-  return { tabId: t.id, url: fresh.url || "", title: fresh.title || "", after: fresh.title || "" };
+  return {
+    tabId: t.id, url: fresh.url || "", title: fresh.title || "", after: fresh.title || "",
+    navigated: !!fresh.navigated, loading: !!fresh.loading,
+  };
 }
 
 async function cmdUrl(a) {

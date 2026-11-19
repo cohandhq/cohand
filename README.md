@@ -199,13 +199,11 @@ Cohand acts with **your** logins, so treat it like handing someone your keyboard
 - **Chrome only.** Other Chromium browsers may work but are untested.
 - **Not on the Chrome Web Store.** You load it unpacked.
 - **Some single-page apps read poorly.** Snapshots can miss main content; screenshots are the fallback.
-- **Clicks can occasionally hang** until the timeout, even when they landed.
 
 The full, honest list: [docs/ISSUES.md](docs/ISSUES.md).
 
 ## Roadmap
 
-- Reliable clicks: fail fast, never double-fire, and confirm navigation
 - Better reading of heavy single-page apps and background tabs
 - Contract tests for the extension layer
 - Windows support

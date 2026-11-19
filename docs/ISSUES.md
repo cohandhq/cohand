@@ -11,9 +11,8 @@ Open problems we know about. Over 35 earlier issues are already fixed. New repor
 
 ## Clicking and input
 
-- **Clicks can hang until the command timeout,** even when the click actually landed, especially on confirm-style buttons. Use a short `--timeout` and verify with `text` or `snapshot`.
-- **Link clicks can report success without navigating.**
-- **Unrecognized errors are retried**, so an action that already navigated can run twice.
+_Fixed in 0.2.2: clicks no longer wait for slow pages to finish loading (they return once navigation starts, with `navigated`/`loading` flags), late link navigations are detected, and a click or page command is never sent twice._
+
 - **`select` on custom comboboxes** reads options in the same tick as opening them, so async menus report "no visible option".
 - **Overlay cursor is offset inside same-origin iframes.**
 - **A user-opened New Tab inside the agent's group** can make commands target `chrome://` and fail.
