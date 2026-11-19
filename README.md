@@ -7,6 +7,7 @@
 <p align="center">Browser automation for AI agents, without the headless browser.<br>Let your coding agents work in your real, logged-in Chrome: across all your profiles, many agents at once, while you watch.</p>
 
 <p align="center">
+<a href="https://github.com/cohandhq/cohand/actions/workflows/test.yml"><img src="https://github.com/cohandhq/cohand/actions/workflows/test.yml/badge.svg" alt="tests"></a>
 <a href="https://www.npmjs.com/package/cohand"><img src="https://img.shields.io/npm/v/cohand.svg" alt="npm"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License: Apache 2.0"></a>
 <img src="https://img.shields.io/badge/platform-macOS%20%C2%B7%20Linux-lightgrey.svg" alt="Platform: macOS · Linux">
@@ -15,7 +16,7 @@
 
 <p align="center"><b>Works with</b> Claude Code · Codex · Cursor · Gemini CLI · GitHub Copilot · opencode · Amp · Goose · Factory · Kiro · pi · Grok<br>and any tool that reads <a href="https://agentskills.io">Agent Skills</a></p>
 
-<p align="center"><a href="#install">Install</a> · <a href="#features">Features</a> · <a href="#performance">Performance</a> · <a href="#how-it-works">How it works</a> · <a href="docs/ISSUES.md">Known issues</a></p>
+<p align="center"><a href="#install">Install</a> · <a href="#features">Features</a> · <a href="#how-is-it-different">Compare</a> · <a href="#performance">Performance</a> · <a href="#how-it-works">How it works</a> · <a href="docs/ISSUES.md">Known issues</a></p>
 
 ```bash
 npm install -g cohand && cohand install
@@ -46,6 +47,16 @@ Cohand takes a simpler route: **you're already logged in, so let your agents wor
 </tr>
 </table>
 
+### Safety at a glance
+
+> Cohand acts with **your** logins, so it's built to stay visible and contained:
+> - **Agents only see their own tab group.** Your other tabs are invisible to them unless you turn that on.
+> - **Hard blocks:** banks, payment pages, password managers and Google account security pages are refused. Password fields are refused. Cookie *values* are never exposed.
+> - **You can always see it and stop it:** a glow and ghost cursor show every action; one click pauses a profile or stops an agent.
+> - **Everything is logged locally**, with typed text and scripts stored as length only.
+> - **Approval prompts are off by default** so agents can work unattended. Turn on *ask-first* in `~/.cohand/policy.json` to approve form submits, uploads and page scripts.
+> - **100% local.** No server, no account, no telemetry.
+
 ### Many agents, many profiles, one Chrome
 
 ```text
@@ -65,6 +76,21 @@ cohand open https://news.ycombinator.com
 cohand snapshot          # the page as text, with clickable refs like [e12]
 cohand click e12
 ```
+
+## How is it different?
+
+Other good tools can drive a real Chrome too. Here's where Cohand fits (as of November 2026):
+
+| | **Cohand** | Playwright MCP (extension mode) | Chrome DevTools MCP (`--autoConnect`) |
+|---|---|---|---|
+| Uses your real, logged-in Chrome | ✅ | ✅ | ✅ |
+| Several profiles **at the same time** | ✅ follows whichever profile you're in | One profile per server (`--profile-dir-name`) | Attaches to the running Chrome |
+| Several agents at once, isolated | ✅ one tab group each | — | — |
+| How agents connect | Plain CLI + Agent Skills: any agent or shell script | MCP | MCP |
+| Page snapshot size (Hacker News) | **~2.5K tokens** | ~12.3K tokens | ~13.3K tokens |
+| Per-profile pause, one-click stop per agent, local action log | ✅ | — | — |
+
+Playwright MCP and Chrome DevTools MCP are excellent for testing and debugging. Cohand is built for the everyday case: **several agents working across your real profiles at the same time, side by side with you.**
 
 ## Features
 
@@ -209,14 +235,9 @@ The full, honest list: [docs/ISSUES.md](docs/ISSUES.md).
 
 ## Contributing
 
-Contributions are very welcome, whether it's bug reports, fixes or new commands.
+Contributions are very welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to get set up, and [docs/ISSUES.md](docs/ISSUES.md) for things to pick up. Found a security problem? Please follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
 
-1. Pick something from [docs/ISSUES.md](docs/ISSUES.md) or open an issue.
-2. `npm install && npm test` (Node's built-in test runner, no browser needed).
-3. After changing the extension, reload it in `chrome://extensions`. After changing `skill/SKILL.md`, re-run `cohand install`.
-4. Open a pull request with a short note on what you changed and how you checked it.
-
-Good first contributions: extension routing tests, the click-reliability items, and `--help` handling in `install` / `doctor`.
+What's changed: [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

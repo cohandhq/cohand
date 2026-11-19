@@ -1,0 +1,30 @@
+name: release
+
+# Publishing a GitHub Release publishes the same version to npm.
+# Uses npm trusted publishing (OIDC): no token is stored anywhere, and npm shows a provenance badge.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm test
+      - name: Check the release tag matches package.json
+        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+      - name: Publish (skipped if this version is already on npm)
+        run: |
+          v=$(node -p 'require("./package.json").version')
+          if npm view "cohand@$v" version >/dev/null 2>&1; then echo "cohand@$v already published, skipping"; else npm publish --access public; fi
