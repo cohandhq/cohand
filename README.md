@@ -1,5 +1,3 @@
-<p align="center"><img src="docs/assets/cover.jpg" alt="Cohand: your browser, every profile, any agent" width="100%"></p>
-
 <p align="center"><img src="docs/assets/logo.png" alt="Cohand logo" width="96" height="96"></p>
 
 <h1 align="center">Cohand</h1>
