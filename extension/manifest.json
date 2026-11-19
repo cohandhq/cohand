@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Cohand",
   "short_name": "Cohand",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Let local agents work in this Chrome profile, in plain sight.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdIsFSknVkG6b4CusHgIwr5fNGl75MhZOThyIF4M7AWZnJRa5YJLK13LHqFAMdioShe8cSqEZeKPTl8qxTVXwNK/ZT8tEN42TCVwI0JiRfi8tPhpUrd09uFYk+uG3gmdB2Qffot7hF95hs67Wj+kCYZJxxfw9RlzTS95MXH/uRx418rK1h5i7n6uEEidsbpgjS2NYTEbrKJl5NifaaqAW1iDuPB1khygkfVHPf4XzCHMLzKO/KtufpnkjAyIqwaKBTvGq2KRMG2vWbIYIp4mA+FfNmtXJIQlcZkAkbRT3NKSqeSO+IESXdfsImmKbiWpk4woaOmjM98IFbn3x/L0lQIDAQAB",
   "permissions": [

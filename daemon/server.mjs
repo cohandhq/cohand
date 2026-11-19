@@ -217,7 +217,11 @@ const NO_INSPECT = new Set(["tabs", "open", "cookies", "downloads"]);
 async function gate(ctx, { req, profile, session, args, timeoutMs }) {
   const policy = loadPolicy(ctx.paths.policyFile);
   const entry = { session: session?.name ?? null, profile, op: req.op, args: redact(req.op, req.args || {}) };
-  const log = (extra) => appendLog(ctx.paths.logDir, { ...entry, ...extra });
+  // The action has already happened by the time we log it; a full disk must not turn it into an error.
+  const log = (extra) => {
+    try { appendLog(ctx.paths.logDir, { ...entry, ...extra }); }
+    catch (e) { console.error(`cohandd: could not write log (${e.message})`); }
+  };
   try {
     let url = req.op === "open" || req.op === "cookies" ? args.url : undefined;
     let topUrl;

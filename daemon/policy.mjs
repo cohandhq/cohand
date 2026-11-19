@@ -35,7 +35,14 @@ export function loadPolicy(file) {
     fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
     fs.writeFileSync(file, JSON.stringify(defaultPolicy(), null, 2) + "\n", { mode: 0o600 });
   }
-  const p = JSON.parse(fs.readFileSync(file, "utf8"));
+  let p;
+  try { p = JSON.parse(fs.readFileSync(file, "utf8")); }
+  catch (e) {
+    // A hand-edit gone wrong must not brick every command. Run on the built-in defaults
+    // (bank/payment/password blocks stay on) and leave the file as-is so it can be repaired.
+    console.error(`cohandd: ${file} is not valid JSON (${e.message}); using default policy until it is fixed`);
+    return defaultPolicy();
+  }
   const d = defaultPolicy();
   const policy = { ...d, ...p, defaults: { ...d.defaults, ...(p.defaults || {}) }, profiles: p.profiles || {} };
   const migrated = migrateBlock(policy.defaults.block);

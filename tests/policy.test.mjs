@@ -207,3 +207,37 @@ test("setBlock adds and removes a domain in a profile's block list", async () =>
   assert.deepEqual(p.profiles.work.block, []);
   assert.throws(() => setBlock(p, "work", "bad domain/x", true), /invalid domain/);
 });
+
+test("a corrupt policy.json falls back to defaults and is left untouched for repair", () => {
+  const home = tmpHome();
+  const file = path.join(home, "policy.json");
+  fs.writeFileSync(file, "{ not json");
+  const err = console.error; console.error = () => {};
+  try {
+    const p = loadPolicy(file);
+    assert.equal(check(p, { profile: "w", op: "snapshot", url: "https://www.paypal.com/x" }).verdict, "deny", "built-in blocks stay on");
+    assert.equal(check(p, { profile: "w", op: "snapshot", url: "https://example.com" }).verdict, "allow");
+  } finally { console.error = err; }
+  assert.equal(fs.readFileSync(file, "utf8"), "{ not json", "file not overwritten");
+});
+
+test("daemon: a failed log write does not turn a completed action into an error", async () => {
+  const home = tmpHome();
+  const d = await startDaemon({ home });
+  const h = await host(d.sock, "work", (m, hh) => {
+    if (m.type !== "cmd") return;
+    if (m.cmd === "inspect") hh.send({ type: "result", id: m.id, ok: true, data: { url: "https://a.com/", risky: false } });
+    else hh.send({ type: "result", id: m.id, ok: true, data: { ran: m.cmd } });
+  });
+  const c = await client(d.sock);
+  const logDir = path.join(home, "log");
+  fs.rmSync(logDir, { recursive: true, force: true });
+  fs.writeFileSync(logDir, "not a directory"); // every log write now fails
+  const err = console.error; console.error = () => {};
+  try {
+    const r = await c.request("snapshot");
+    assert.equal(r.ok, true);
+    assert.equal(r.data.ran, "snapshot");
+  } finally { console.error = err; }
+  h.close(); c.close(); await d.close();
+});

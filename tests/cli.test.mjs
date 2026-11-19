@@ -46,6 +46,9 @@ test("cli end to end against daemon + fake host", async () => {
   await run(home, ["click", "10,20"]);
   assert.deepEqual(seen.at(-1).args, { x: 10, y: 20 });
 
+  await run(home, ["wait", "--text", "Saved", "--timeout", "20000"]);
+  assert.deepEqual(seen.at(-1), { cmd: "wait", args: { text: "Saved", timeoutMs: 19500 } }, "wait --timeout reaches the page");
+
   const s = await run(home, ["screenshot"]);
   assert.equal(s.code, 0, s.err);
   const screenshotPath = s.out.split("\n")[0];
@@ -107,4 +110,19 @@ test("--help prints usage and does not run the command (no daemon needed)", asyn
   assert.match(r3.out, /^cohand adopt <tabId>/);
   const r4 = await run(home, ["session", "resume", "-h"]);
   assert.match(r4.out, /^cohand session resume <id>/);
+});
+
+test("install/doctor --help print usage and never install; unknown flags are refused", async () => {
+  const home = tmpHome();
+  const env = { HOME: home };
+  const r = await run(home, ["install", "--help"], env);
+  assert.equal(r.code, 0);
+  assert.match(r.out, /^cohand install \[--dry-run\]/);
+  assert.ok(!fs.existsSync(path.join(home, ".local/bin/cohand")), "help must not install");
+  const r2 = await run(home, ["doctor", "-h"], env);
+  assert.match(r2.out, /^cohand doctor/);
+  const r3 = await run(home, ["install", "--bogus"], env);
+  assert.equal(r3.code, 2);
+  assert.match(r3.err, /unknown install option "--bogus"/);
+  assert.ok(!fs.existsSync(path.join(home, ".local/bin/cohand")), "unknown flag must not install");
 });

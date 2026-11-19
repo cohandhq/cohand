@@ -19,17 +19,17 @@ _Fixed in 0.2.2: clicks no longer wait for slow pages to finish loading (they re
 
 ## Daemon, CLI and install
 
+_Fixed in 0.2.3: `install`/`doctor --help` show help instead of running, and unknown flags are refused; a corrupt `policy.json` falls back to the built-in defaults instead of blocking everything; a failed log write no longer turns a finished action into an error; `wait --timeout` is honoured._
+
 - Oversized commands time out instead of erroring clearly; one zero-length frame can stop the host.
 - Restarting the daemon drops in-flight commands, and the CLI then waits ~155 s.
-- A corrupt `policy.json` blocks every command; a failed log write can report a completed action as an error.
 - Renaming a Chrome profile drops its policy.
 - Session identity is the tab-group title, so renaming a group forks the session.
 - Tabs used with `console` / `network` stay attached to the debugger.
-- `install` / `doctor` ignore `--help`; `wait --timeout` is ignored; `log --today` is a no-op.
+- `log --today` is a no-op (today is already the default), and earlier days can't be read from the CLI.
 - The tmux fallback reports success without checking it started.
 - `screenshot --full` can repeat the first screen instead of capturing the whole page.
 
 ## Tests
 
 - The extension layer (`background.js`, `executors.js`, `content.js`, `popup.js`) has no direct tests yet. Routing and error-handling contract tests would be a great first contribution.
-- `shared/protocol.mjs` and `shared/protocol.md` describe an older design and are not used in production.

@@ -116,6 +116,16 @@ async function main() {
   let name = argv.shift();
 
   if (name === "doctor" || name === "install") {
+    // Check flags before importing: `install --help` must never run the install.
+    const allowed = name === "install" ? ["--dry-run"] : [];
+    if (argv.includes("--help") || argv.includes("-h")) {
+      console.log(name === "install"
+        ? "cohand install [--dry-run]\nSets up the daemon, the Chrome native-messaging host, the cohand command and agent skills. --dry-run prints the plan without changing anything."
+        : "cohand doctor\nChecks the daemon, native-messaging host, extension and skills, and prints what to fix.");
+      return;
+    }
+    const unknown = argv.find((a) => !allowed.includes(a));
+    if (unknown) usage(`unknown ${name} option "${unknown}"`);
     const mod = await import(`./${name}.mjs`).catch(() => null);
     if (!mod) usage(`${name} is not available`);
     process.exit((await mod.run(argv)) ?? 0);
@@ -143,6 +153,8 @@ async function main() {
   if (session && !["session.start", "session.resume"].includes(spec.op)) req.session = session;
   if (globals.profile) req.profile = globals.profile;
   if (globals.timeout) req.timeoutMs = globals.timeout;
+  // wait has its own in-page deadline; let --timeout drive it, ending just before the command times out.
+  if (globals.timeout && spec.op === "wait") args.timeoutMs = Math.max(100, globals.timeout - 500);
   // policy/log/off/on talk about the daemon itself, not a session
   if (["policy", "log", "off", "on", "profiles"].includes(spec.op)) delete req.session;
 

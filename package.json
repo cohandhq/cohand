@@ -1,6 +1,6 @@
 {
   "name": "cohand",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Your browser. Every profile. Any agent. Let AI agents work in your real, logged-in Chrome.",
   "license": "Apache-2.0",
   "type": "module",
